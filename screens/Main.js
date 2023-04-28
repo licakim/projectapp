@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   StyleSheet,
@@ -11,12 +12,15 @@ import {
 //import React, { useEffect, useState } from "react";
 import { Fontisto } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import SelectDropdown from "react-native-select-dropdown";
+import { theme } from "../colors";
 //import trashScreen from "Trash";
 //import infoScreen from "Info";
 import { NavigationContainer } from "@react-navigation/native";
 
-export default function Main() {
-  const CHEVRON = <Entypo name="chevron-small-down" size={24} color="black" />;
+export default function Main({ navigation }) {
+  const sort = ["유통기한", "카테고리"];
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -27,14 +31,59 @@ export default function Main() {
           returnKeyType="done"
         />
         <TouchableOpacity style={styles.searchIcon}>
-          <Fontisto name="search" size={24} color="darkgrey" />
+          <Fontisto name="search" size={24} color="rgb(192, 221, 247)" />
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        <TouchableOpacity style={styles.sortBtn}>
-          <Entypo name="chevron-small-down" size={18} color="grey" />
+        <SelectDropdown
+          buttonStyle={styles.sortBtn}
+          buttonTextStyle={{ color: "white", fontSize: 15 }}
+          rowTextStyle={{ color: "darkgrey", fontSize: 15 }}
+          rowStyle={{
+            height: 40,
+          }}
+          renderDropdownIcon={(isOpened) => {
+            return (
+              <Fontisto
+                name={isOpened ? "angle-up" : "angle-down"}
+                size={15}
+                color="white"
+              />
+            );
+          }}
+          dropdownStyle={{
+            borderBottomStartRadius: 7,
+            borderBottomEndRadius: 7,
+            borderTopStartRadius: 7,
+          }}
+          data={sort}
+          onSelect={(selectedItem, index) => {}}
+          defaultButtonText="유통기한"
+          buttonTextAfterSelection={(selectedItem, index) => {
+            return selectedItem;
+          }}
+          rowTextForSelection={(item, index) => {
+            return item;
+          }}
+        />
+        <View style={{ flex: 7 }}></View>
+        <TouchableOpacity
+          style={styles.plusBtn}
+          onPress={() => navigation.navigate("addScreen")}
+        >
+          <AntDesign name="pluscircleo" size={40} color={theme.load} />
         </TouchableOpacity>
-        <ScrollView></ScrollView>
+      </View>
+      <View style={styles.Bottombar}>
+        <TouchableOpacity onPress={() => navigation.navigate("trashScreen")}>
+          <Fontisto name="trash" size={27} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <AntDesign name="book" size={27} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("mypageScreen")}>
+          <AntDesign name="user" size={27} color="white" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -43,31 +92,32 @@ export default function Main() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "beige",
+    backgroundColor: theme.lightblue,
     //alignItems: "center",
     //justifyContent: "center",
   },
   body: {
-    flex: 17,
-    backgroundColor: "beige",
-    borderTopWidth: 3,
-    borderTopColor: "darkgrey",
+    flex: 14.5,
+    backgroundColor: theme.lightblue,
+    borderTopWidth: 2,
+    borderTopColor: theme.load,
     // margin: 10,
     marginTop: 20,
     // marginBottom: 30,
     alignItems: "flex-end",
   },
   search: {
-    flex: 1,
+    flex: 0.8,
     flexDirection: "row",
+    justifyContent: "center",
     marginLeft: 10,
     marginRight: 10,
     marginTop: 70,
   },
   searchbar: {
-    backgroundColor: "ivory",
-    borderWidth: 3,
-    borderColor: "darkgrey",
+    backgroundColor: "white",
+    borderWidth: 2,
+    borderColor: theme.load,
     borderRadius: 8,
     width: 320,
     // marginLeft: 10,
@@ -78,15 +128,27 @@ const styles = StyleSheet.create({
     //justifyContent: "center",
   },
   searchIcon: {
-    marginTop: 8,
+    marginTop: 5,
     marginLeft: 8,
   },
   sortBtn: {
-    backgroundColor: "darkgrey",
-    alignItems: "center",
-    justifyContent: "center",
-    borderBottomStartRadius: 20,
+    backgroundColor: theme.load,
+    //alignItems: "center",
+    //justifyContent: "center",
+    borderBottomStartRadius: 7,
     padding: 5,
-    width: 50,
+    height: 30,
+    width: 110,
+  },
+  plusBtn: {
+    flex: 1,
+    marginRight: 20,
+  },
+  Bottombar: {
+    flex: 1.5,
+    backgroundColor: theme.load,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
 });

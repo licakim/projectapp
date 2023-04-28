@@ -6,9 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableHighlight,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { theme } from "../colors";
+//import axios from "axios";
 //const [focus, setfocus] = useState(false);
 //const focusing = () => setfocus(true);
 export default function Join({ navigation }) {
@@ -18,12 +21,25 @@ export default function Join({ navigation }) {
   const [email, setEmail] = useState("");
   const [check, setCheck] = useState("");
 
+  const oneButtonAlert = (title, Msg) =>
+  Alert.alert(title, Msg, [
+    { text: "OK", onPress: () => console.log("OK Pressed") },
+  ]);
+
+  //const onLoggin=(id, pw)=>{
+  //  axios({
+  //    method:"POST",
+  //   url
+  // })
+
+  //};
+  // const [loginInfo, setLoginInfo] = useState({ id: "", pw: "" });
   const checking = () => {
     if (check === pw) {
       //alert("");
       ref_input4.current.focus();
     } else {
-      alert("비밀번호가 일치하지 않습니다");
+      oneButtonAlert("","비밀번호가 일치하지 않습니다");
       setCheck("");
       ref_input3.current.focus();
     }
@@ -86,6 +102,7 @@ export default function Join({ navigation }) {
             style={{ ...styles.joinform, width: 280 }}
             placeholder="이메일"
             returnKeyType="done"
+            keyboardType="email-address"
             ref={ref_input5}
           ></TextInput>
           <TouchableOpacity style={styles.confirmBtn}>
@@ -95,7 +112,7 @@ export default function Join({ navigation }) {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => {
-            alert("회원가입 완료");
+            oneButtonAlert("","회원가입 완료");
             navigation.navigate("loginScreen");
           }}
         >
@@ -110,13 +127,13 @@ export default function Join({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "beige",
+    backgroundColor: theme.skyblue,
     alignItems: "center",
     justifyContent: "center",
   },
   title: {
-    flex: 1,
-    backgroundColor: "beige",
+    flex: 0.7,
+    backgroundColor: theme.lightblue,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -128,9 +145,15 @@ const styles = StyleSheet.create({
     color: "grey",
     marginBottom: 10,
   },
-  body: { flex: 4, backgroundColor: "ivory" },
+  body: {
+    flex: 4,
+    backgroundColor: theme.lightblue,
+    justifyContent: "center",
+    //borderWidth: 1,
+    //borderColor: "darkgrey",
+  },
   join: {
-    marginTop: 50,
+    // marginTop: 50,
     flexDirection: "row",
   },
   joinform: {
@@ -142,11 +165,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 7,
     borderColor: "lightgrey",
+    backgroundColor: "white",
   },
-  bottom: { flex: 1, backgroundColor: "beige" },
+  bottom: { flex: 0.7, backgroundColor: theme.lightblue },
   btnText: { fontWeight: 500, color: "darkgrey" },
   btn: {
-    backgroundColor: "grey",
+    backgroundColor: theme.load,
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -162,7 +186,7 @@ const styles = StyleSheet.create({
   },
   confirmBtn: {
     padding: 7,
-    backgroundColor: "lightgrey",
+    backgroundColor: theme.load,
     borderRadius: 3,
     //borderWidth: 1,
     //borderColor: "darkgrey",
