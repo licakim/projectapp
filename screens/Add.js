@@ -124,6 +124,7 @@ export default function Add({ navigation }) {
             onSelect={(selectedItem, index) => {}}
             defaultButtonText="가공식품"
             buttonTextAfterSelection={(selectedItem, index) => {
+              setSelectedCategory(selectedItem);
               return selectedItem;
             }}
             rowTextForSelection={(item, index) => {

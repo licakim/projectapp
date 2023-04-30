@@ -13,10 +13,10 @@ export default function Trash({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Image
+      {/* <Image
         source={require("../New.gif")}
         style={{ width: 180, height: 180, marginTop: 40 }}
-      />
+      /> */}
     </View>
   );
 }

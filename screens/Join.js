@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableHighlight,
+  TouchableWithoutFeedback,
+  Keyboard,
   Alert,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
@@ -20,11 +22,12 @@ export default function Join({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [check, setCheck] = useState("");
+  const [state, setState] = useState(true);
 
   const oneButtonAlert = (title, Msg) =>
-  Alert.alert(title, Msg, [
-    { text: "OK", onPress: () => console.log("OK Pressed") },
-  ]);
+    Alert.alert(title, Msg, [
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
 
   //const onLoggin=(id, pw)=>{
   //  axios({
@@ -34,93 +37,112 @@ export default function Join({ navigation }) {
 
   //};
   // const [loginInfo, setLoginInfo] = useState({ id: "", pw: "" });
-  const checking = () => {
-    if (check === pw) {
+  const checkingPw = (pw) => {
+    setPw(pw);
+    if (check !== pw && check !== "") setState(false);
+    else setState(true);
+  };
+
+  const checkingCheck = (check) => {
+    setCheck(check);
+    if (check !== pw) {
+      setState(false);
+      //      console.log("비밀번호가 일치하지 않습니다");
       //alert("");
-      ref_input4.current.focus();
+      // ref_input4.current.focus();
     } else {
-      oneButtonAlert("","비밀번호가 일치하지 않습니다");
-      setCheck("");
-      ref_input3.current.focus();
+      setState(true);
+      //setCheck("");
+      //ref_input3.current.focus();
     }
   };
+
   const ref_input2 = useRef();
   const ref_input3 = useRef();
   const ref_input4 = useRef();
   const ref_input5 = useRef();
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.title}></View>
-      <View style={styles.body}>
-        <View style={styles.join}>
-          <Text style={styles.titleText}>JOIN</Text>
-          <AntDesign name="adduser" size={24} color="grey" />
-        </View>
-        <TextInput
-          onChangeText={(id) => setId(id)}
-          value={id}
-          //autoFocus={true}
-          style={styles.joinform}
-          placeholder="아이디"
-          returnKeyType="next"
-          onSubmitEditing={() => ref_input2.current.focus()}
-        ></TextInput>
-        <TextInput
-          onChangeText={(pw) => setPw(pw)}
-          value={pw}
-          style={styles.joinform}
-          secureTextEntry={true}
-          returnKeyType="next"
-          placeholder="비밀번호"
-          onSubmitEditing={() => ref_input3.current.focus()}
-          ref={ref_input2}
-        ></TextInput>
-        <TextInput
-          onChangeText={(check) => setCheck(check)}
-          value={check}
-          style={styles.joinform}
-          onSubmitEditing={checking}
-          secureTextEntry={true}
-          placeholder="비밀번호 확인"
-          returnKeyType="next"
-          ref={ref_input3}
-        ></TextInput>
-        <TextInput
-          onSubmitEditing={() => ref_input5.current.focus()}
-          onChangeText={(name) => setName(name)}
-          value={name}
-          style={styles.joinform}
-          placeholder="이름"
-          returnKeyType="next"
-          ref={ref_input4}
-        ></TextInput>
-        <View style={styles.email}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <View style={styles.title}></View>
+        <View style={styles.body}>
+          <View style={styles.join}>
+            <Text style={styles.titleText}>JOIN</Text>
+          </View>
           <TextInput
-            onChangeText={(email) => setEmail(email)}
-            value={email}
-            style={{ ...styles.joinform, width: 280 }}
-            placeholder="이메일"
-            returnKeyType="done"
-            keyboardType="email-address"
-            ref={ref_input5}
+            onChangeText={(id) => setId(id)}
+            value={id}
+            //autoFocus={true}
+            style={styles.joinform}
+            placeholder="아이디"
+            returnKeyType="next"
+            onSubmitEditing={() => ref_input2.current.focus()}
           ></TextInput>
-          <TouchableOpacity style={styles.confirmBtn}>
-            <Text style={styles.confirmText}>인증</Text>
+          <TextInput
+            onChangeText={(pw) => checkingPw(pw)}
+            value={pw}
+            style={styles.joinform}
+            secureTextEntry={true}
+            returnKeyType="next"
+            placeholder="비밀번호"
+            onSubmitEditing={() => ref_input3.current.focus()}
+            ref={ref_input2}
+          ></TextInput>
+          <TextInput
+            onChangeText={(check) => checkingCheck(check)}
+            value={check}
+            style={styles.joinform}
+            secureTextEntry={true}
+            placeholder="비밀번호 확인"
+            returnKeyType="next"
+            ref={ref_input3}
+          ></TextInput>
+          {state ? (
+            ""
+          ) : (
+            <Text style={styles.checkPwd}>비밀번호가 일치하지 않습니다</Text>
+          )}
+          <TextInput
+            onSubmitEditing={() => ref_input5.current.focus()}
+            onChangeText={(name) => setName(name)}
+            value={name}
+            style={styles.joinform}
+            placeholder="이름"
+            returnKeyType="next"
+            ref={ref_input4}
+          ></TextInput>
+          <View style={styles.email}>
+            <TextInput
+              onChangeText={(email) => setEmail(email)}
+              value={email}
+              style={{ ...styles.joinform, width: 280 }}
+              placeholder="이메일"
+              returnKeyType="done"
+              keyboardType="email-address"
+              ref={ref_input5}
+            ></TextInput>
+            <TouchableOpacity style={styles.confirmBtn}>
+              <Text style={styles.confirmText}>인증</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              oneButtonAlert("", "회원가입 완료");
+              navigation.navigate("loginScreen");
+            }}
+          >
+            <Text style={styles.btnText}>join</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => {
-            oneButtonAlert("","회원가입 완료");
-            navigation.navigate("loginScreen");
-          }}
-        >
-          <Text style={styles.btnText}>join</Text>
-        </TouchableOpacity>
+        <View style={styles.bottom}></View>
       </View>
-      <View style={styles.bottom}></View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -140,8 +162,8 @@ const styles = StyleSheet.create({
   titleText: {
     //marginTop: 50,
     fontSize: 20,
-    marginLeft: 20,
-    marginRight: 5,
+    //marginLeft: 20,
+    //marginRight: 5,
     color: "grey",
     marginBottom: 10,
   },
@@ -154,7 +176,9 @@ const styles = StyleSheet.create({
   },
   join: {
     // marginTop: 50,
-    flexDirection: "row",
+    // flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   joinform: {
     marginLeft: 20,
@@ -197,5 +221,10 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     color: "grey",
+  },
+  checkPwd: {
+    marginLeft: 22,
+    color: "red",
+    opacity: 0.4,
   },
 });
