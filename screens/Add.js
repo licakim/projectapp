@@ -22,7 +22,7 @@ export default function Add({ navigation }) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState("날짜를 선택하세요");
   //const [foodInform, setFoodInform ] = useState({});
-
+  //import axios from "axios";
   const initState = () => {
     setName("");
     setCnt(0);
@@ -106,8 +106,8 @@ export default function Add({ navigation }) {
               marginTop: 20,
               height: 40,
             }}
-            buttonTextStyle={{ color: "darkgrey" }}
-            rowTextStyle={{ color: "darkgrey" }}
+            buttonTextStyle={{ color: "darkgrey", fontSize: 15 }}
+            rowTextStyle={{ color: "darkgrey", fontSize: 15 }}
             renderDropdownIcon={(isOpened) => {
               return (
                 <Fontisto
@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
   titleText: {
     //marginTop: 50,
     fontSize: 20,
-    marginLeft: 20,
-    marginRight: 5,
+    //marginLeft: 20,
+    // marginRight: 5,
     color: "grey",
     marginBottom: 10,
   },
@@ -186,6 +186,8 @@ const styles = StyleSheet.create({
   add: {
     //marginTop: 60,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     //padidngBottom: 20,
   },
   addview: {

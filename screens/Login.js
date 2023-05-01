@@ -30,7 +30,7 @@ export default function Login({ navigation }) {
   //   .then(response => {
   //     const obj = JSON.parse(response.data);
   //     if(response.data.success){
-  //       navigation.navigate("joinScreen");
+  //       navigation.navigate("mainScreen");
   //     }else{
   //       oneButtonAlert("","아이디 또는 비밀번호가 잘못됐습니다");
   //     }
