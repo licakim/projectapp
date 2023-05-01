@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { theme } from "../colors";
+//import axios from "axios";
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
@@ -20,6 +21,24 @@ export default function Login({ navigation }) {
     Alert.alert(title, Msg, [
       { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
+
+  // const logIn = ()=>{
+  //   axios.post('link',{
+  //     userId: id,
+  //     password: pw,
+  //   })
+  //   .then(response => {
+  //     const obj = JSON.parse(response.data);
+  //     if(response.data.success){
+  //       navigation.navigate("joinScreen");
+  //     }else{
+  //       oneButtonAlert("","아이디 또는 비밀번호가 잘못됐습니다");
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   })
+  // }
 
   return (
     <View style={styles.container}>
@@ -48,6 +67,7 @@ export default function Login({ navigation }) {
       <TouchableOpacity
         onPress={() => {
           if (id !== "" && pw !== "") navigation.navigate("mainScreen");
+          //if (id !== "" && pw !== "") Login();
           else if (id === "") oneButtonAlert("", "아이디를 입력하세요");
           else if (pw === "") oneButtonAlert("", "비밀번호를 입력하세요");
         }}

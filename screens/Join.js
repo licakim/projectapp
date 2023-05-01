@@ -14,8 +14,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { theme } from "../colors";
 //import axios from "axios";
-//const [focus, setfocus] = useState(false);
-//const focusing = () => setfocus(true);
 export default function Join({ navigation }) {
   const [pw, setPw] = useState("");
   const [id, setId] = useState("");
@@ -29,11 +27,21 @@ export default function Join({ navigation }) {
       { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
 
-  //const onLoggin=(id, pw)=>{
-  //  axios({
-  //    method:"POST",
-  //   url
-  // })
+  // const joinIn =()=>{
+  //   axios.post('url',{
+  //     username: name,
+  //     password: pw,
+  //     userid: id,
+  //     useremail:email,
+  //   })
+  //   .then(function(response){
+  //     oneButtonAlert("", "회원가입 완료");
+  //     navigation.navigate("loginScreen");
+  //   })
+  //   .catch(function(error){
+  //     console.log(error);
+  //   });
+  // }
 
   //};
   // const [loginInfo, setLoginInfo] = useState({ id: "", pw: "" });
@@ -133,6 +141,7 @@ export default function Join({ navigation }) {
           <TouchableOpacity
             style={styles.btn}
             onPress={() => {
+              //joinin();
               oneButtonAlert("", "회원가입 완료");
               navigation.navigate("loginScreen");
             }}
