@@ -23,21 +23,21 @@ export default function Login({ navigation }) {
       { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
 
-  // const token = AsyncStorage.getItem("logintoken");
-
-  // const get_info = async () => {
-  //   try {
-  //     const response = await axios.get("http://192.168.145.1:3001/userinfo", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     const userData = response.data;
-  //     console.log(userData);
-  //   } catch (error) {
-  //     console.log(error.response.data.message);
-  //   }
-  // };
+  const get_info = async () => {
+    try {
+      const token = await AsyncStorage.getItem("logintoken");
+      const response = await axios.get("http://192.168.145.1:3001/userinfo", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const userData = response.data;
+      await AsyncStorage.setItem("myinfo", JSON.stringify(userData));
+      console.log(userData);
+    } catch (error) {
+      console.log(error.response?.data?.message || error.message);
+    }
+  };
 
   const logIn = async () => {
     try {
@@ -48,33 +48,13 @@ export default function Login({ navigation }) {
       const token = response.data.token;
       // const token = jwt.sign({ id: id }, "mysecretkey");
       await AsyncStorage.setItem("logintoken", token);
+      get_info();
       // await AsyncStorage.setItem("loginid", id);
       navigation.navigate("mainScreen");
     } catch (error) {
       oneButtonAlert("", error.response.data.message);
     }
   };
-
-  // const logIn = () => {
-  //   axios
-  //     .post("http://192.168.145.1:3001/login", {
-  //       id: id,
-  //       pw: pw,
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       // AsyncStorage.setItem("id", id);
-  //       // const token = response.data.token;
-  //       // console.log(token);
-  //       //AsyncStorage.setItem("token", response.data.token);
-  //       // get_info();
-  //       navigation.navigate("mainScreen");
-  //     })
-  //     .catch((error) => {
-  //       //console.log(error.response.data);
-  //       oneButtonAlert("", error.response.data.message);
-  //     });
-  // };
 
   return (
     <View style={styles.container}>

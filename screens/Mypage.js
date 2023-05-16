@@ -13,30 +13,26 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "../colors";
 import axios from "axios";
 export default function Mypage({ navigation }) {
-  const get_info = async () => {
-    try {
-      const token = await AsyncStorage.getItem("logintoken");
-      const response = await axios.get("http://192.168.145.1:3001/userinfo", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const userData = response.data;
-      //await AsyncStorage.setItem('myinfo', JSON.stringify(userData));
-      console.log(userData);
-    } catch (error) {
-      console.log(error.response?.data?.message || error.message);
-    }
-  };
+  const [myInfo, setMyInfo] = useState({});
+
+  useEffect(() => {
+    const fetchMyInfo = async () => {
+      const myInfoJson = await AsyncStorage.getItem("myinfo");
+      const myInfo = JSON.parse(myInfoJson);
+      setMyInfo(myInfo);
+    };
+
+    fetchMyInfo();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text></Text>
       <View>
-        <Button title="OK" onPress={() => get_info()} />
-        <Text>{`이름 : `}</Text>
-        <Text>{`아이디 : `}</Text>
-        <Text>{`이메일 : `}</Text>
+        <Text>{`이름 :${myInfo.name}`}</Text>
+        <Text>{`아이디 :${myInfo.id} `}</Text>
+        <Text>{`닉네임 :${myInfo.nickname} `}</Text>
         <TouchableOpacity>
           <Text>수정</Text>
         </TouchableOpacity>

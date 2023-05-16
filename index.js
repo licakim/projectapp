@@ -37,29 +37,6 @@ app.post("/adduser", (req, res) => {
   );
 });
 
-// app.post("/login", (req, res) => {
-//   const id = req.body.id;
-//   const pw = req.body.pw;
-
-//   db.query(`SELECT * FROM users.user WHERE id = ?`, [id], (err, rows) => {
-//     if (err) {
-//       console.log(err);
-//       return res.status(500).json({ success: false, message: "서버 에러" });
-//     }
-//     if (!rows[0]) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "가입되지 않은 아이디입니다." });
-//     }
-//     if (rows[0].pw !== pw) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "비밀번호가 일치하지 않습니다." });
-//     }
-//     return res.status(200).json({ success: true, message: "로그인 성공" });
-//   });
-// });
-
 app.post("/login", (req, res) => {
   const id = req.body.id;
   const pw = req.body.pw;
@@ -128,18 +105,6 @@ app.post("/checkdupnickname", (req, res) => {
   );
 });
 
-// app.get("/userinfo", (req, res) => {
-//   db.query(
-//     "select * from users.user where token = ?",
-//     [req.token],
-//     (err, result) => {
-//       if (err) {
-//       } else {
-//       }
-//     }
-//   );
-// });
-
 app.get("/userinfo", (req, res) => {
   const token = req.header("Authorization").replace("Bearer ", "");
   try {
@@ -167,23 +132,3 @@ app.get("/userinfo", (req, res) => {
     return res.status(401).send({ message: "인증 오류" });
   }
 });
-
-// app.get("/userinfo", (req, res) => {
-//   const token = req.header("Authorization").replace("Bearer ", "");
-//     const decoded = jwt.verify(token, "mysecretkey");
-//     const id = decoded.id;
-
-//     const query = "SELECT * FROM users WHERE id = ?";
-//     db.query(query, [id], (error, results) => {
-//       if (error) {
-//         return res.status(500).send({ message: "서버 오류 발생" });
-//       }
-
-//       if (results.length === 0) {
-//         return res.status(404).send({ message: "사용자를 찾을 수 없음" });
-//       }
-
-//       const user = results[0];
-//       res.send(user);
-//     });
-// });
