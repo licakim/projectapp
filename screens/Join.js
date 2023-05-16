@@ -13,55 +13,80 @@ import {
 import React, { useEffect, useState, useRef } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { theme } from "../colors";
-//import axios from "axios";
+import axios from "axios";
 export default function Join({ navigation }) {
   const [pw, setPw] = useState("");
   const [id, setId] = useState("");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [isvalidpw, setIsvalidpw] = useState(true);
+  const [nickname, setNickname] = useState("");
+  // const [dupnickname, setDupnickname] = useState(true);
   const [check, setCheck] = useState("");
   const [state, setState] = useState(true);
 
   const oneButtonAlert = (title, Msg) =>
-    Alert.alert(title, Msg, [
-      { text: "OK", onPress: () => console.log("OK Pressed") },
-    ]);
+    Alert.alert(title, Msg, [{ text: "OK" }]);
 
-  // const joinIn =()=>{
-  //   axios.post('url',{
-  //     username: name,
-  //     password: pw,
-  //     userid: id,
-  //     useremail:email,
-  //   })
-  //   .then(function(response){
-  //     oneButtonAlert("", "회원가입 완료");
-  //     navigation.navigate("loginScreen");
-  //   })
-  //   .catch(function(error){
-  //     console.log(error);
-  //   });
-  // }
+  const joinIn = async () => {
+    try {
+      const response = await axios.post("http://192.168.145.1:3001/adduser", {
+        id: id,
+        pw: pw,
+        name: name,
+        nickname: nickname,
+      });
+      oneButtonAlert("", "회원가입 완료");
+      navigation.navigate("loginScreen");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  //};
-  // const [loginInfo, setLoginInfo] = useState({ id: "", pw: "" });
+  const check_dup_id = () => {
+    axios
+      .post("http://192.168.145.1:3001/checkdupid", {
+        id: id,
+      })
+      .then((response) => {
+        //setDupid(response.data.message);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // setDupid(error.response.data.message);
+        oneButtonAlert("", error.response.data.message);
+      });
+  };
+
+  const check_dup_nickname = () => {
+    axios
+      .post("http://192.168.145.1:3001/checkdupnickname", {
+        nickname: nickname,
+      })
+      .then((response) => {
+        //setDupid(response.data.message);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // setDupid(error.response.data.message);
+        oneButtonAlert("", error.response.data.message);
+      });
+  };
+
   const checkingPw = (pw) => {
     setPw(pw);
     if (check !== pw && check !== "") setState(false);
     else setState(true);
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (regex.test(pw)) setIsvalidpw(true);
+    else setIsvalidpw(false);
   };
 
   const checkingCheck = (check) => {
     setCheck(check);
     if (check !== pw) {
       setState(false);
-      //      console.log("비밀번호가 일치하지 않습니다");
-      //alert("");
-      // ref_input4.current.focus();
     } else {
       setState(true);
-      //setCheck("");
-      //ref_input3.current.focus();
     }
   };
 
@@ -89,7 +114,9 @@ export default function Join({ navigation }) {
             style={styles.joinform}
             placeholder="아이디"
             returnKeyType="next"
-            onSubmitEditing={() => ref_input2.current.focus()}
+            onSubmitEditing={() => {
+              if (id != "") check_dup_id();
+            }}
           ></TextInput>
           <TextInput
             onChangeText={(pw) => checkingPw(pw)}
@@ -98,9 +125,18 @@ export default function Join({ navigation }) {
             secureTextEntry={true}
             returnKeyType="next"
             placeholder="비밀번호"
-            onSubmitEditing={() => ref_input3.current.focus()}
-            ref={ref_input2}
+            onSubmitEditing={() => {
+              // if (pw != "") validation_check();
+            }}
+            // ref={ref_input2}
           ></TextInput>
+          {isvalidpw ? (
+            ""
+          ) : (
+            <Text style={styles.checkPwd}>
+              최소 8 자, 하나 이상의 문자와 하나의 숫자 필요
+            </Text>
+          )}
           <TextInput
             onChangeText={(check) => checkingCheck(check)}
             value={check}
@@ -108,7 +144,7 @@ export default function Join({ navigation }) {
             secureTextEntry={true}
             placeholder="비밀번호 확인"
             returnKeyType="next"
-            ref={ref_input3}
+            //  ref={ref_input3}
           ></TextInput>
           {state ? (
             ""
@@ -116,34 +152,30 @@ export default function Join({ navigation }) {
             <Text style={styles.checkPwd}>비밀번호가 일치하지 않습니다</Text>
           )}
           <TextInput
-            onSubmitEditing={() => ref_input5.current.focus()}
             onChangeText={(name) => setName(name)}
             value={name}
             style={styles.joinform}
             placeholder="이름"
             returnKeyType="next"
-            ref={ref_input4}
+            // ref={ref_input4}
           ></TextInput>
-          <View style={styles.email}>
-            <TextInput
-              onChangeText={(email) => setEmail(email)}
-              value={email}
-              style={{ ...styles.joinform, width: 280 }}
-              placeholder="이메일"
-              returnKeyType="done"
-              keyboardType="email-address"
-              ref={ref_input5}
-            ></TextInput>
-            <TouchableOpacity style={styles.confirmBtn}>
-              <Text style={styles.confirmText}>인증</Text>
-            </TouchableOpacity>
-          </View>
+          <TextInput
+            onChangeText={(nickname) => setNickname(nickname)}
+            value={nickname}
+            //autoFocus={true}
+            style={styles.joinform}
+            placeholder="닉네임"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              if (nickname != "") check_dup_nickname();
+            }}
+          ></TextInput>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => {
-              //joinin();
-              oneButtonAlert("", "회원가입 완료");
-              navigation.navigate("loginScreen");
+            onPress={async () => {
+              if (pw === "" || id === "" || name === "" || nickname === "")
+                oneButtonAlert("", "항목을 다 입력하세요");
+              else await joinIn();
             }}
           >
             <Text style={styles.btnText}>join</Text>
@@ -169,10 +201,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    //marginTop: 50,
     fontSize: 20,
-    //marginLeft: 20,
-    //marginRight: 5,
     color: "grey",
     marginBottom: 10,
   },
@@ -180,12 +209,8 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: theme.lightblue,
     justifyContent: "center",
-    //borderWidth: 1,
-    //borderColor: "darkgrey",
   },
   join: {
-    // marginTop: 50,
-    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -194,11 +219,14 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 20,
     borderWidth: 1,
-    //width: 280,
     padding: 10,
     borderRadius: 7,
     borderColor: "lightgrey",
     backgroundColor: "white",
+  },
+  putid: {
+    flexDirection: "row",
+    alignItems: "flex-end",
   },
   bottom: { flex: 0.7, backgroundColor: theme.lightblue },
   btnText: { fontWeight: 500, color: "darkgrey" },
@@ -215,18 +243,11 @@ const styles = StyleSheet.create({
   email: {
     flexDirection: "row",
     alignItems: "flex-end",
-    // justifyContent: "space-between",
   },
   confirmBtn: {
     padding: 7,
     backgroundColor: theme.load,
     borderRadius: 3,
-    //borderWidth: 1,
-    //borderColor: "darkgrey",
-    //marginLeft: 3,
-    //alignItems: "center",
-    //justifyContent: "center",
-    //marginRight: 10,
   },
   confirmText: {
     color: "grey",

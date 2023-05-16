@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableHighlight,
+  Modal,
   Button,
   Alert,
 } from "react-native";
@@ -21,13 +22,35 @@ export default function Add({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState("날짜를 선택하세요");
-  //const [foodInform, setFoodInform ] = useState({});
+  const [modalvisible, setModalVisible] = useState(false);
   //import axios from "axios";
+
+  // const sendfoodinform =()=>{
+  //   axios.post('url',{
+  //     foodname: name,
+  //     category: category,
+  //     expiration-date: selectedDate,
+  //   })
+  //   .then(function(response){
+  //     twoButtonAlert("", "식품 등록을 완료하시겠습니까?");
+  //     navigation.navigate("loginScreen");
+  //   })
+  //   .catch(function(error){
+  //     console.log(error);
+  //   });
+  // }
+
+  // const addfood = () => {
+  //   setModalVisible(true);
+  // };
+
   const initState = () => {
+    setModalVisible(false);
     setName("");
     setCnt(0);
     setSelectedDate("날짜를 선택하세요");
   };
+
   const twoButtonAlert = (title, Msg) =>
     Alert.alert(title, Msg, [
       {
@@ -37,6 +60,16 @@ export default function Add({ navigation }) {
       },
       { text: "완료", onPress: () => navigation.navigate("mainScreen") },
     ]);
+
+  // const infocheckAlert = () =>
+  //   Alert.alert("", `이름:${name}\n카테고리:${selectedCategory}\n`, [
+  //     {
+  //       text: "네",
+  //       onPress: () => twoButtonAlert("", "식품 등록을 완료하시겠습니끼?"),
+  //       style: "cancel",
+  //     },
+  //     { text: "아니오", onPress: () => navigation.navigate("addScreen") },
+  //   ]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -151,8 +184,31 @@ export default function Add({ navigation }) {
         </View>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => twoButtonAlert("", "식품 등록을 완료하시겠습니까?")}
+          //onPress={() => twoButtonAlert("", "식품 등록을 완료하시겠습니까?")}
+          onPress={() => setModalVisible(true)}
         >
+          <Modal
+            visible={modalvisible}
+            animationType="slide"
+            style={{ margin: 0, justifyContent: "flex-end" }}
+            // transparent="true"
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text>모달창 내용</Text>
+              <Button
+                title="OK"
+                onPress={() =>
+                  twoButtonAlert("", "식품 등록을 완료하시겠습니까?")
+                }
+              />
+            </View>
+          </Modal>
           <Text style={styles.btnText}>등록</Text>
         </TouchableOpacity>
       </View>

@@ -8,10 +8,11 @@ import {
   Image,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+//import Swal from "sweetalert2";
 import { theme } from "../colors";
-//import axios from "axios";
+import axios from "axios";
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
@@ -22,23 +23,58 @@ export default function Login({ navigation }) {
       { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
 
-  // const logIn = ()=>{
-  //   axios.post('link',{
-  //     userId: id,
-  //     password: pw,
-  //   })
-  //   .then(response => {
-  //     const obj = JSON.parse(response.data);
-  //     if(response.data.success){
+  // const token = AsyncStorage.getItem("logintoken");
+
+  // const get_info = async () => {
+  //   try {
+  //     const response = await axios.get("http://192.168.145.1:3001/userinfo", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     const userData = response.data;
+  //     console.log(userData);
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  const logIn = async () => {
+    try {
+      const response = await axios.post("http://192.168.145.1:3001/login", {
+        id: id,
+        pw: pw,
+      });
+      const token = response.data.token;
+      // const token = jwt.sign({ id: id }, "mysecretkey");
+      await AsyncStorage.setItem("logintoken", token);
+      // await AsyncStorage.setItem("loginid", id);
+      navigation.navigate("mainScreen");
+    } catch (error) {
+      oneButtonAlert("", error.response.data.message);
+    }
+  };
+
+  // const logIn = () => {
+  //   axios
+  //     .post("http://192.168.145.1:3001/login", {
+  //       id: id,
+  //       pw: pw,
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       // AsyncStorage.setItem("id", id);
+  //       // const token = response.data.token;
+  //       // console.log(token);
+  //       //AsyncStorage.setItem("token", response.data.token);
+  //       // get_info();
   //       navigation.navigate("mainScreen");
-  //     }else{
-  //       oneButtonAlert("","아이디 또는 비밀번호가 잘못됐습니다");
-  //     }
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   })
-  // }
+  //     })
+  //     .catch((error) => {
+  //       //console.log(error.response.data);
+  //       oneButtonAlert("", error.response.data.message);
+  //     });
+  // };
 
   return (
     <View style={styles.container}>
@@ -66,18 +102,21 @@ export default function Login({ navigation }) {
       </View>
       <TouchableOpacity
         onPress={() => {
-          if (id !== "" && pw !== "") navigation.navigate("mainScreen");
+          if (id !== "" && pw !== "") logIn();
           //if (id !== "" && pw !== "") Login();
           else if (id === "") oneButtonAlert("", "아이디를 입력하세요");
           else if (pw === "") oneButtonAlert("", "비밀번호를 입력하세요");
         }}
       >
-        <Text style={{ ...styles.btnText, color: "#5C5C60", marginTop: 5 }}>
+        <Text style={{ fontSize: 18, color: "#5C5C60", marginTop: 5 }}>
           login
         </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("joinScreen")}>
         <Text style={{ ...styles.btnText, color: "grey" }}>create account</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={{ color: "grey", fontSize: 15 }}>forgot password?</Text>
       </TouchableOpacity>
     </View>
   );
@@ -102,7 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 15,
     marginTop: 2,
   },
 });
